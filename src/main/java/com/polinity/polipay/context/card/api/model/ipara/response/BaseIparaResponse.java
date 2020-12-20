@@ -11,22 +11,31 @@ import javax.xml.bind.annotation.XmlElement;
 @AllArgsConstructor
 public class BaseIparaResponse {
 
-    @XmlElement(name = "result")
-    String result;
+  @XmlElement(name = "result")
+  String result;
 
-    @XmlElement(name = "errorCode")
-    String errorCode;
+  @XmlElement(name = "errorCode")
+  String errorCode;
 
-    @XmlElement(name = "errorMessage")
-    String errorMessage;
+  @XmlElement(name = "errorMessage")
+  String errorMessage;
 
-    @XmlElement(name = "responseMessage")
-    String responseMessage;
+  @XmlElement(name = "responseMessage")
+  String responseMessage;
 
-    @XmlElement(name = "mode")
-    String mode;
+  @XmlElement(name = "mode")
+  String mode;
 
-    @XmlElement(name = "hash")
-    String hash;
+  @XmlElement(name = "hash")
+  String hash;
 
+  @Override
+  public String toString() {
+    return "BaseIparaResponse{" +
+        "result='" + result + '\'' +
+        ", errorCode='" + errorCode + '\'' +
+        ", errorMessage='" + errorMessage + '\'' +
+        ", responseMessage='" + responseMessage + '\'' +
+        '}';
+  }
 }

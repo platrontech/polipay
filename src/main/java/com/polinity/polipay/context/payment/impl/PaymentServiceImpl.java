@@ -4,7 +4,7 @@ import com.polinity.polipay.commons.api.model.DoneResponse;
 import com.polinity.polipay.commons.api.model.IparaEnvironment;
 import com.polinity.polipay.commons.error.ApiException;
 import com.polinity.polipay.commons.error.ErrorCodes;
-import com.polinity.polipay.commons.utils.IparaHelper;
+import com.polinity.polipay.commons.utils.IparaRequestHelper;
 import com.polinity.polipay.context.card.api.model.ipara.response.BaseIparaResponse;
 import com.polinity.polipay.context.payment.PaymentResultHandlerService;
 import com.polinity.polipay.context.payment.PaymentService;
@@ -28,19 +28,19 @@ public class PaymentServiceImpl implements PaymentService {
 
     private static final String DEFAULT_INSTALLMENT = "1";
 
-    private final IparaHelper iparaHelper;
+    private final IparaRequestHelper iparaRequestHelper;
     private final RestTemplate restTemplate;
     private final IparaEnvironment iparaEnvironment;
-    private final ConversionService defaultConversionService;
+    private final ConversionService mvcConversionService;
     private final PaymentResultHandlerService paymentResultHandlerService;
 
     @SneakyThrows
     @Override
     public DoneResponse authWithSavedCard(PaymentRequest paymentRequest) {
-        IparaAuthRequest authRequest = defaultConversionService.convert(paymentRequest, IparaAuthRequest.class);
+        IparaAuthRequest authRequest = mvcConversionService.convert(paymentRequest, IparaAuthRequest.class);
         populateInitialAuthRequest(authRequest);
 
-        HttpHeaders headers = iparaHelper.getHttpHeadersForXml();
+        HttpHeaders headers = iparaRequestHelper.getHttpHeadersForXml(null);
         HttpEntity<IparaAuthRequest> httpEntity = new HttpEntity<>(authRequest, headers);
         ResponseEntity<BaseIparaResponse> responseEntity = restTemplate.exchange("/rest/payment/auth", HttpMethod.POST, httpEntity, BaseIparaResponse.class);
         if (!responseEntity.getStatusCode().is2xxSuccessful()) {

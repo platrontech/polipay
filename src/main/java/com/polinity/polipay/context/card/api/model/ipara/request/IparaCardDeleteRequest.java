@@ -9,10 +9,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class IparaCardDeleteRequest {
+public class IparaCardDeleteRequest extends BaseIparaRequest {
 
-    String userId;
-    String cardId;
-    String clientIp;
-    String mode;
+  String userId;
+  String cardId;
+  String clientIp;
+
+  @Override
+  protected String hashString() {
+    return userId + cardId + clientIp;
+  }
 }

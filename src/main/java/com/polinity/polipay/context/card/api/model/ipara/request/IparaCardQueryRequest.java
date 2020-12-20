@@ -1,18 +1,19 @@
 package com.polinity.polipay.context.card.api.model.ipara.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class IparaCardQueryRequest {
+@EqualsAndHashCode(callSuper = true)
+public class IparaCardQueryRequest extends BaseIparaRequest {
 
-    String userId;
-    String clientIp;
-    String cardId;
-    String mode;
+  String userId;
+  String clientIp;
+
+  @Override
+  protected String hashString() {
+    return userId + clientIp;
+  }
 }

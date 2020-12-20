@@ -18,34 +18,35 @@ import java.time.Duration;
 @Configuration
 public class PolipayConfig implements WebMvcConfigurer {
 
-    @Value("${provider.ipara.connection.url}")
-    private String url;
+  @Value("${provider.ipara.connection.url}")
+  private String url;
 
-    @Value("${provider.ipara.connection.timeout}")
-    private Long timeout;
+  @Value("${provider.ipara.connection.timeout}")
+  private Long timeout;
 
-    @Value("${provider.ipara.api.mode}")
-    private String mode;
+  @Value("${provider.ipara.api.mode}")
+  private String mode;
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplateBuilder()
-                .rootUri(url)
-                .setConnectTimeout(Duration.ofMillis(timeout))
-                .setReadTimeout(Duration.ofMillis(timeout))
-                .build();
-    }
+  @Bean
+  public RestTemplate restTemplate() {
+    return new RestTemplateBuilder()
+        .rootUri(url)
+        .setConnectTimeout(Duration.ofMillis(timeout))
+        .setReadTimeout(Duration.ofMillis(timeout))
+        .build();
+  }
 
-    @Bean
-    public IparaEnvironment getEnvironment() {
-        return IparaEnvironment.valueOf(mode);
-    }
+  @Bean
+  public IparaEnvironment getEnvironment() {
+    return IparaEnvironment.valueOf(mode);
+  }
 
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new PaymentRequestToIparaAuthRequest());
-        registry.addConverter(new PaymentRequestToPaymentAuthDocument());
-        registry.addConverter(new SaveCardRequestToIparaCardCreateRequest());
-        registry.addConverter(new PaymentRequestToPaymentAuthErrorDocument());
-    }
+  @Override
+  public void addFormatters(FormatterRegistry registry) {
+
+    registry.addConverter(new PaymentRequestToIparaAuthRequest());
+    registry.addConverter(new PaymentRequestToPaymentAuthDocument());
+    registry.addConverter(new PaymentRequestToPaymentAuthErrorDocument());
+    registry.addConverter(new SaveCardRequestToIparaCardCreateRequest());
+  }
 }

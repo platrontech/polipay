@@ -9,7 +9,7 @@ import lombok.Value;
 @EqualsAndHashCode(callSuper = true)
 public class DoneResponse extends BaseResponse {
 
-    public static DoneResponse of() {
-        return DoneResponse.builder().build();
-    }
+  public static DoneResponse of() {
+    return DoneResponse.builder().build();
+  }
 }

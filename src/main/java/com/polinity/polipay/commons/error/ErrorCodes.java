@@ -1,11 +1,15 @@
 package com.polinity.polipay.commons.error;
 
 public enum ErrorCodes {
-    API_SERVER_ERROR(100, "Serverda bir hata oluştu", true),
+    API_SERVER_ERROR(100, "Serviste bir hata oluştu", true),
     UNAUTHORIZED(101, "Ulasmak istenen API'ye yetkiniz yoktur", true),
     UNAUTHORIZED_OPERATION(102, "Bu işlem için yetkiniz yoktur", true),
+    GENERIC_ERROR(103, "İşleminiz sırasında bir hata oluştu", true),
 
-    CARD_ERROR(200, "Kart işlemi sırasında bir hata oluştu", true),
+    CARD_VALIDATION_ERROR(200, "Kart bilgileri eksik ya da hatalı", true),
+    CARD_ALREADY_REGISTERED(201, "Kart zaten kayıtlı", true),
+
+
     GENERIC_PAYMENT_ERROR(300, "Ödeme sırasında bir hata oluştu", true),
     PAYMENT_CARD_LIMIT_ERROR(300, "Limit yetersiz", true);
 

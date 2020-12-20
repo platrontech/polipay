@@ -18,7 +18,7 @@ public class PaymentResultHandlerServiceImpl implements PaymentResultHandlerServ
     private static final String SUCCEED_PAYMENT = "1";
     private static final String NO_LIMIT_ERROR_CODE = "4";
 
-    private final ConversionService defaultConversionService;
+    private final ConversionService mvcConversionService;
     private final PaymentAuthRepository paymentAuthRepository;
     private final PaymentAuthErrorRepository paymentAuthErrorRepository;
 
@@ -34,12 +34,12 @@ public class PaymentResultHandlerServiceImpl implements PaymentResultHandlerServ
     }
 
     private void handleSucceedPayment(PaymentRequest paymentRequest) {
-        PaymentAuthDocument paymentAuthDocument = defaultConversionService.convert(paymentRequest, PaymentAuthDocument.class);
+        PaymentAuthDocument paymentAuthDocument = mvcConversionService.convert(paymentRequest, PaymentAuthDocument.class);
         paymentAuthRepository.save(paymentAuthDocument);
     }
 
     private void handleFailedPayment(PaymentRequest paymentRequest, BaseIparaResponse response) {
-        PaymentAuthErrorDocument paymentAuthErrorDocument = defaultConversionService.convert(paymentRequest, PaymentAuthErrorDocument.class);
+        PaymentAuthErrorDocument paymentAuthErrorDocument = mvcConversionService.convert(paymentRequest, PaymentAuthErrorDocument.class);
         populatePaymentAuthErrorDocumentWithPaymentResult(response, paymentAuthErrorDocument);
 
         paymentAuthErrorRepository.save(paymentAuthErrorDocument);
