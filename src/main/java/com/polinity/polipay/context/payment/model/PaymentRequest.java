@@ -18,24 +18,25 @@ import java.util.List;
 @NoArgsConstructor
 public class PaymentRequest {
 
-    @NotNull
-    String orderId;
+  @NotNull
+  String orderId;
 
-    @NotNull
-    String cardId;
+  @NotNull
+  String cardId;
 
-    @NotNull
-    String buyerId;
+  @Valid
+  @NotNull
+  Seller seller;
 
-    @Valid
-    @NotNull
-    Seller seller;
+  @Valid
+  @NotNull
+  Buyer buyer;
 
-    @DecimalMin("0.01")
-    BigDecimal price;
+  @DecimalMin("0.01")
+  BigDecimal price;
 
-    @NotEmpty
-    @NotNull
-    @Valid
-    List<OrderItem> items;
+  @NotEmpty
+  @NotNull
+  @Valid
+  List<OrderItem> items;
 }

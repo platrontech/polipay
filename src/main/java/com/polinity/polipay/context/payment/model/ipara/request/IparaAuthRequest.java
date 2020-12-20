@@ -1,9 +1,7 @@
 package com.polinity.polipay.context.payment.model.ipara.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.polinity.polipay.context.card.api.model.ipara.request.BaseIparaRequest;
+import lombok.*;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -15,29 +13,32 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @XmlRootElement(name = "auth")
-public class IparaAuthRequest {
+@EqualsAndHashCode(callSuper = true)
+public class IparaAuthRequest extends BaseIparaRequest {
 
-    @XmlElement(name = "threeD")
-    String threeD;
+  String threeD;
+  String orderId;
+  String amount;
+  String installment;
+  String userId;
+  String cardId;
+  String mode;
 
-    @XmlElement(name = "orderId")
-    String orderId;
+  IparaAuthPurchaser purchaser;
+  List<IparaAuthProduct> products;
 
-    @XmlElement(name = "amount")
-    String amount;
+  @XmlElementWrapper
+  @XmlElement(name="product")
+  public List<IparaAuthProduct> getProducts() {
+    return products;
+  }
 
-    @XmlElement(name = "installment")
-    String installment;
-
-    @XmlElement(name = "userId")
-    String userId;
-
-    @XmlElement(name = "cardId")
-    String cardId;
-
-    String mode;
-
-    @XmlElementWrapper(name = "products")
-    @XmlElement(name = "product")
-    List<IparaAuthProduct> products;
+  @Override
+  protected String hashString() {
+    return orderId
+        + amount
+        + mode
+        + userId
+        + cardId;
+  }
 }

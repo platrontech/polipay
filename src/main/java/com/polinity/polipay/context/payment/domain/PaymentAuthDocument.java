@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode(callSuper = true)
 @Document("payment_auth")
 public class PaymentAuthDocument extends BaseDocument {
+    private String paymentId;
     private String orderId;
     private String buyerId;
     private String cardToken;

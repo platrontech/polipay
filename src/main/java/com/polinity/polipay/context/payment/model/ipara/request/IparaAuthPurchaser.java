@@ -11,8 +11,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@XmlRootElement(name = "product")
-public class IparaAuthProduct {
-  String productName;
-  String price;
+@XmlRootElement(name = "purchaser")
+public class IparaAuthPurchaser {
+  String name;
+  String surname;
+  String email;
+  String clientIp;
 }

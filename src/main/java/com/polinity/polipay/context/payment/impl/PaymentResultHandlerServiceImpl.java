@@ -1,11 +1,11 @@
 package com.polinity.polipay.context.payment.impl;
 
-import com.polinity.polipay.commons.api.model.DoneResponse;
-import com.polinity.polipay.commons.error.ApiException;
-import com.polinity.polipay.commons.error.ErrorCodes;
 import com.polinity.polipay.context.card.api.model.ipara.response.BaseIparaResponse;
 import com.polinity.polipay.context.payment.PaymentResultHandlerService;
-import com.polinity.polipay.context.payment.domain.*;
+import com.polinity.polipay.context.payment.domain.PaymentAuthDocument;
+import com.polinity.polipay.context.payment.domain.PaymentAuthErrorDocument;
+import com.polinity.polipay.context.payment.domain.PaymentAuthErrorRepository;
+import com.polinity.polipay.context.payment.domain.PaymentAuthRepository;
 import com.polinity.polipay.context.payment.model.PaymentRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
@@ -15,47 +15,28 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PaymentResultHandlerServiceImpl implements PaymentResultHandlerService {
 
-    private static final String SUCCEED_PAYMENT = "1";
-    private static final String NO_LIMIT_ERROR_CODE = "4";
+  private final ConversionService mvcConversionService;
+  private final PaymentAuthRepository paymentAuthRepository;
+  private final PaymentAuthErrorRepository paymentAuthErrorRepository;
 
-    private final ConversionService mvcConversionService;
-    private final PaymentAuthRepository paymentAuthRepository;
-    private final PaymentAuthErrorRepository paymentAuthErrorRepository;
+  public void handleSucceedPayment(String paymentId, PaymentRequest paymentRequest) {
+    PaymentAuthDocument paymentAuthDocument = mvcConversionService.convert(paymentRequest, PaymentAuthDocument.class);
+    paymentAuthDocument.setPaymentId(paymentId);
 
-    @Override
-    public DoneResponse handle(PaymentRequest request, BaseIparaResponse response) {
-        if (SUCCEED_PAYMENT.equals(response.getResult())) {
-            handleSucceedPayment(request);
-            return DoneResponse.of();
-        }
+    paymentAuthRepository.save(paymentAuthDocument);
+  }
 
-        handleFailedPayment(request, response);
-        return null;
-    }
+  public void handleFailedPayment(PaymentRequest paymentRequest, BaseIparaResponse response) {
+    PaymentAuthErrorDocument paymentAuthErrorDocument = mvcConversionService.convert(paymentRequest, PaymentAuthErrorDocument.class);
+    populatePaymentAuthErrorDocumentWithPaymentResult(response, paymentAuthErrorDocument);
 
-    private void handleSucceedPayment(PaymentRequest paymentRequest) {
-        PaymentAuthDocument paymentAuthDocument = mvcConversionService.convert(paymentRequest, PaymentAuthDocument.class);
-        paymentAuthRepository.save(paymentAuthDocument);
-    }
+    paymentAuthErrorRepository.save(paymentAuthErrorDocument);
+  }
 
-    private void handleFailedPayment(PaymentRequest paymentRequest, BaseIparaResponse response) {
-        PaymentAuthErrorDocument paymentAuthErrorDocument = mvcConversionService.convert(paymentRequest, PaymentAuthErrorDocument.class);
-        populatePaymentAuthErrorDocumentWithPaymentResult(response, paymentAuthErrorDocument);
 
-        paymentAuthErrorRepository.save(paymentAuthErrorDocument);
-        handleErrorCode(response.getErrorCode());
-    }
-
-    private void handleErrorCode(String errorCode) {
-        if (NO_LIMIT_ERROR_CODE.equals(errorCode)) {
-            throw new ApiException(ErrorCodes.PAYMENT_CARD_LIMIT_ERROR);
-        }
-
-        throw new ApiException(ErrorCodes.GENERIC_PAYMENT_ERROR);
-    }
-
-    private void populatePaymentAuthErrorDocumentWithPaymentResult(BaseIparaResponse response, PaymentAuthErrorDocument paymentAuthErrorDocument) {
-        paymentAuthErrorDocument.setErrorCode(response.getErrorCode());
-        paymentAuthErrorDocument.setErrorMessage(response.getErrorMessage());
-    }
+  private void populatePaymentAuthErrorDocumentWithPaymentResult(BaseIparaResponse response, PaymentAuthErrorDocument
+      paymentAuthErrorDocument) {
+    paymentAuthErrorDocument.setErrorCode(response.getErrorCode());
+    paymentAuthErrorDocument.setErrorMessage(response.getErrorMessage());
+  }
 }

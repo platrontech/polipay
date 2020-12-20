@@ -6,14 +6,14 @@ import org.springframework.core.convert.converter.Converter;
 
 public class PaymentRequestToPaymentAuthErrorDocument implements Converter<PaymentRequest, PaymentAuthErrorDocument> {
 
-    @Override
-    public PaymentAuthErrorDocument convert(PaymentRequest paymentRequest) {
-        return PaymentAuthErrorDocument.builder()
-                .orderId(paymentRequest.getOrderId())
-                .buyerId(paymentRequest.getBuyerId())
-                .sellerId(paymentRequest.getSeller().getId())
-                .cardToken(paymentRequest.getCardId())
-                .price(paymentRequest.getPrice())
-                .build();
-    }
+  @Override
+  public PaymentAuthErrorDocument convert(PaymentRequest paymentRequest) {
+    return PaymentAuthErrorDocument.builder()
+        .orderId(paymentRequest.getOrderId())
+        .buyerId(paymentRequest.getBuyer().getId())
+        .sellerId(paymentRequest.getSeller().getId())
+        .cardToken(paymentRequest.getCardId())
+        .price(paymentRequest.getPrice())
+        .build();
+  }
 }
