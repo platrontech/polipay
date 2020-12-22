@@ -2,23 +2,19 @@ package com.polinity.polipay.commons.error;
 
 public class ApiException extends RuntimeException {
 
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = -2807615315787903932L;
 
-  private String message;
   private final ErrorCodes errorCode;
+  private String message;
+  private ExternalError externalError;
 
   public ApiException(ErrorCodes errorCode) {
     this.errorCode = errorCode;
   }
 
-  public ApiException(Throwable cause, ErrorCodes errorCode) {
-    super(cause);
+  public ApiException(ErrorCodes errorCode, ExternalError externalError) {
     this.errorCode = errorCode;
-  }
-
-  public ApiException(String message, ErrorCodes errorCode) {
-    this.message = message;
-    this.errorCode = errorCode;
+    this.externalError = externalError;
   }
 
   @Override
@@ -30,4 +26,7 @@ public class ApiException extends RuntimeException {
     return errorCode;
   }
 
+  public ExternalError getExternalError() {
+    return externalError;
+  }
 }

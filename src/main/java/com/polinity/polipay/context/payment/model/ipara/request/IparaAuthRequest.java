@@ -39,6 +39,9 @@ public class IparaAuthRequest extends BaseIparaRequest {
         + amount
         + mode
         + userId
-        + cardId;
+        + cardId
+        + purchaser.getName()
+        + purchaser.getSurname()
+        + purchaser.getEmail();
   }
 }

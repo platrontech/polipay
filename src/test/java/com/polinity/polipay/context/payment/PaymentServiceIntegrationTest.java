@@ -12,11 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.Collections;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class PaymentServiceTest extends BaseIntegrationTest {
+public class PaymentServiceIntegrationTest extends BaseIntegrationTest {
 
   @Autowired
   private PaymentService paymentService;

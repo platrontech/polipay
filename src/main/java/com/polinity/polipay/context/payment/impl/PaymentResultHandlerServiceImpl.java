@@ -1,6 +1,6 @@
 package com.polinity.polipay.context.payment.impl;
 
-import com.polinity.polipay.context.card.api.model.ipara.response.BaseIparaResponse;
+import com.polinity.polipay.commons.error.ApiException;
 import com.polinity.polipay.context.payment.PaymentResultHandlerService;
 import com.polinity.polipay.context.payment.domain.PaymentAuthDocument;
 import com.polinity.polipay.context.payment.domain.PaymentAuthErrorDocument;
@@ -26,17 +26,20 @@ public class PaymentResultHandlerServiceImpl implements PaymentResultHandlerServ
     paymentAuthRepository.save(paymentAuthDocument);
   }
 
-  public void handleFailedPayment(PaymentRequest paymentRequest, BaseIparaResponse response) {
+  public void handleFailedPayment(PaymentRequest paymentRequest, ApiException error) {
     PaymentAuthErrorDocument paymentAuthErrorDocument = mvcConversionService.convert(paymentRequest, PaymentAuthErrorDocument.class);
-    populatePaymentAuthErrorDocumentWithPaymentResult(response, paymentAuthErrorDocument);
-
+    populatePaymentAuthErrorDocumentWithPaymentResult(paymentAuthErrorDocument, error);
     paymentAuthErrorRepository.save(paymentAuthErrorDocument);
   }
 
 
-  private void populatePaymentAuthErrorDocumentWithPaymentResult(BaseIparaResponse response, PaymentAuthErrorDocument
-      paymentAuthErrorDocument) {
-    paymentAuthErrorDocument.setErrorCode(response.getErrorCode());
-    paymentAuthErrorDocument.setErrorMessage(response.getErrorMessage());
+  private void populatePaymentAuthErrorDocumentWithPaymentResult(PaymentAuthErrorDocument paymentAuthErrorDocument, ApiException error) {
+    if (error.getExternalError() != null) {
+      paymentAuthErrorDocument.setErrorCode(error.getExternalError().getCode());
+      paymentAuthErrorDocument.setErrorMessage(error.getExternalError().getMessage());
+    } else {
+      paymentAuthErrorDocument.setErrorCode(String.valueOf(error.getErrorCode().getError()));
+      paymentAuthErrorDocument.setErrorMessage(error.getErrorCode().getError());
+    }
   }
 }

@@ -2,6 +2,7 @@ package com.polinity.polipay.context.payment.impl;
 
 import com.polinity.polipay.commons.api.model.DoneResponse;
 import com.polinity.polipay.commons.api.model.IparaEnvironment;
+import com.polinity.polipay.commons.error.ApiException;
 import com.polinity.polipay.commons.utils.HttpRequestHandler;
 import com.polinity.polipay.commons.utils.IparaRequestHelper;
 import com.polinity.polipay.context.payment.PaymentResultHandlerService;
@@ -41,10 +42,15 @@ public class PaymentServiceImpl implements PaymentService {
     HttpHeaders headers = iparaRequestHelper.getHttpHeadersForXml(authRequest.getRequestHash());
     HttpEntity<IparaAuthRequest> httpEntity = new HttpEntity<>(authRequest, headers);
 
-    IparaAuthResponse response = HttpRequestHandler.handle(() -> restTemplate.exchange("/rest/payment/auth", HttpMethod.POST, httpEntity, IparaAuthResponse.class));
-    paymentResultHandlerService.handleSucceedPayment(response.getOrderId(), paymentRequest);
+    try {
+      IparaAuthResponse response = HttpRequestHandler.handle(() -> restTemplate.exchange("/rest/payment/auth", HttpMethod.POST, httpEntity, IparaAuthResponse.class));
+      paymentResultHandlerService.handleSucceedPayment(response.getOrderId(), paymentRequest);
 
-    return DoneResponse.of();
+      return DoneResponse.of();
+    } catch (ApiException exception) {
+      paymentResultHandlerService.handleFailedPayment(paymentRequest, exception);
+      throw exception;
+    }
   }
 
   private void populateInitialAuthRequest(IparaAuthRequest authRequest) {
