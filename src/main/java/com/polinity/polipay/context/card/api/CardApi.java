@@ -18,24 +18,24 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class CardApi extends BaseController {
 
-    private final CardQueryService cardQueryService;
-    private final CardCommandService cardCommandService;
+  private final CardQueryService cardQueryService;
+  private final CardCommandService cardCommandService;
 
-    @GetMapping("/user/{userId}")
-    public ApiResponse<BaseListResponse<CardTwin>> login(@PathVariable("userId") String userId) {
-        return ok(cardQueryService.retrieveCreditCards(userId));
-    }
+  @GetMapping("/user/{userId}")
+  public ApiResponse<BaseListResponse<CardTwin>> retrieveCreditCards(@PathVariable("userId") String userId) {
+    return ok(cardQueryService.retrieveCreditCards(userId));
+  }
 
-    @PostMapping("/user/{userId}")
-    public ApiResponse<DoneResponse> addAdminUser(@PathVariable("userId") String userId,
-                                                  @RequestBody @Valid SaveCardRequest saveCardRequest) {
-        saveCardRequest.setUserId(userId);
-        return ok(cardCommandService.saveCard(saveCardRequest));
-    }
+  @PostMapping("/user/{userId}")
+  public ApiResponse<DoneResponse> saveCard(@PathVariable("userId") String userId,
+                                            @RequestBody @Valid SaveCardRequest saveCardRequest) {
+    saveCardRequest.setUserId(userId);
+    return ok(cardCommandService.saveCard(saveCardRequest));
+  }
 
-    @DeleteMapping("/{cardId}/user/{userId}/")
-    public ApiResponse<DoneResponse> deleteCard(@PathVariable("userId") String userId,
-                                                @PathVariable("cardId") String cardId) {
-        return ok(cardCommandService.deleteCard(userId, cardId));
-    }
+  @DeleteMapping("/{cardId}/user/{userId}")
+  public ApiResponse<DoneResponse> deleteCard(@PathVariable("userId") String userId,
+                                              @PathVariable("cardId") String cardId) {
+    return ok(cardCommandService.deleteCard(userId, cardId));
+  }
 }

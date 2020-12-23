@@ -2,7 +2,6 @@ package com.polinity.polipay.context.card.api.model.ipara.request;
 
 import com.polinity.polipay.commons.config.IparaConstants;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -25,7 +24,7 @@ public abstract class BaseIparaRequest {
   }
 
   private String getTransactionDateString() {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(IparaConstants.TRANSACTION_DATE_FORMAT);
     return simpleDateFormat.format(new Date());
   }
 

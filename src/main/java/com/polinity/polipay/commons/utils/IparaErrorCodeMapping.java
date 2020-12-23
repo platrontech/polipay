@@ -9,6 +9,7 @@ public class IparaErrorCodeMapping {
   private static final Map<String, ErrorCodes> errorCodes = new HashMap<>();
 
   static {
+    errorCodes.put("970", ErrorCodes.CARD_NOT_FOUND);
     errorCodes.put("973", ErrorCodes.CARD_ALREADY_REGISTERED);
     errorCodes.put("989", ErrorCodes.CARD_ALREADY_REGISTERED);
     errorCodes.put("877", ErrorCodes.CARD_VALIDATION_ERROR);

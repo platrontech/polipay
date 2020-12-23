@@ -8,6 +8,7 @@ public enum ErrorCodes {
 
     CARD_VALIDATION_ERROR(200, "Kart bilgileri eksik ya da hatalı", true),
     CARD_ALREADY_REGISTERED(201, "Kart zaten kayıtlı", true),
+    CARD_NOT_FOUND(202, "Kart bulunamadı", true),
 
 
     GENERIC_PAYMENT_ERROR(300, "Ödeme sırasında bir hata oluştu", true),

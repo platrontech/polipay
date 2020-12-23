@@ -1,5 +1,6 @@
 package com.polinity.polipay.commons.utils;
 
+import com.polinity.polipay.commons.config.IparaConstants;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +18,6 @@ import java.util.Date;
 public class IparaRequestHelper {
 
   private static final String DIGEST_ALGORITHM = "SHA1";
-  private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
   @Value("${provider.ipara.security.publicKey}")
   private String publicKey;
@@ -25,7 +25,7 @@ public class IparaRequestHelper {
   private String version;
 
   public static String getTransactionDateString() {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(IparaConstants.TRANSACTION_DATE_FORMAT);
     return simpleDateFormat.format(new Date());
   }
 

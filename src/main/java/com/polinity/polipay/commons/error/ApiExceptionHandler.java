@@ -7,7 +7,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -36,19 +35,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         .debugMessage(ex.getErrorCode().getError());
 
     return handleError(HttpStatus.OK, errorBuilder.build());
-  }
-
-  @ExceptionHandler({AccessDeniedException.class})
-  protected ResponseEntity<ApiError> handleAccessDeniedException(AccessDeniedException ex) {
-    logger.error(ex.getMessage(), ex);
-    ApiError apiError = ApiError.builder()
-        .code(HttpStatus.FORBIDDEN.value())
-        .status(HttpStatus.FORBIDDEN)
-        .debugMessage("unauthorized api access")
-        .message(ErrorCodes.UNAUTHORIZED.getError())
-        .build();
-
-    return handleError(HttpStatus.FORBIDDEN, apiError);
   }
 
   @ExceptionHandler({Exception.class})
