@@ -1,0 +1,39 @@
+image:  cancobanoglu/tanbula-server-sbt-python-baseatest
+
+options:
+  docker: true
+
+pipelines:
+  branches:
+    master:
+      - step:
+          caches:
+            - maven
+            - pip
+          size: 2x
+          name: Build, test and push image to AWS ECR
+          script:
+            - eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
+            - BUILD_NUMBER=$BITBUCKET_BUILD_NUMBER
+            - echo "Build number':' ${BUILD_NUMBER}"
+            # test and build
+            - ./mvnw clean install -DskipTests=true
+            # make image
+            - docker build -t polipay .
+            # tag image
+            - docker tag polipay:latest 533903057014.dkr.ecr.eu-central-1.amazonaws.com/polipay:latest
+            - docker tag polipay:latest 533903057014.dkr.ecr.eu-central-1.amazonaws.com/polipay:${BUILD_NUMBER}
+            # push to aws ecr
+            - docker push 533903057014.dkr.ecr.eu-central-1.amazonaws.com/polipay:latest
+            - docker push 533903057014.dkr.ecr.eu-central-1.amazonaws.com/polipay:${BUILD_NUMBER}
+
+      - step:
+          name: Deploy to test
+          deployment: Test
+          script:
+            - ssh root@${DO_TEST_BE_SERVER_HOST} "sh /root/docker/app-server/run.sh"
+
+definitions:
+  services:
+    mongo:
+      image: mongo
