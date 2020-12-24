@@ -1,16 +1,14 @@
 package com.polinity.polipay.commons.api.model;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-@Data
+@Value
 @Builder
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DoneResponse extends BaseResponse {
 
   public static DoneResponse of() {
